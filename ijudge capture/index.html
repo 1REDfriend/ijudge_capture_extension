@@ -1,8 +1,30 @@
 <html>
-    <body>
-        <div>
-            <h1>Break I-judge KMTIL</h1>
-            <script src="popup.js"></script>
-        </div>
-    </body>
+
+<body>
+    <div class="main">
+        <h1>Break I-judge KMTIL</h1>
+        <h2>One Page</h2>
+        <br/>
+        <button id="start">Start</button>
+        <button id="stop">Stop</button>
+        <script src="./script/puppeteer.js"></script>
+        <script src="./script/background.js"></script>
+        <script src="./script/content.js"></script>
+    </div>
+</body>
+
 </html>
+
+<style>
+    input , button {
+        border-radius: 5px;
+    }
+    body{
+        color: white;
+        background-color: rgb(140, 20, 64);
+    }
+
+    .main {
+        width: 300px;
+    }
+</style>

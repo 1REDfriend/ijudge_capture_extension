@@ -1,10 +1,18 @@
 {
-    "manifest_version": 3,
-    "name": "Ijudge Capture Extensions",
-    "description": "Base Level Extension",
-    "version": "1.0",
-    "action": {
-      "default_popup": "index.html",
-      "default_icon": "ijudge_blueberry.png"
-    }
+  "manifest_version": 3,
+  "name": "Ijudge Capture Extensions",
+  "description": "Base Level Extension",
+  "version": "1.0",
+  "permissions": [
+    "activeTab",
+    "background",
+    "scripting",
+    "storage"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "index.html"
   }
+}
