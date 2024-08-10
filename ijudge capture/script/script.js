@@ -36,7 +36,6 @@ document.getElementById('saveButton').addEventListener('click', async () => {
                             const inputSpecificationElements = document.querySelectorAll('div#previewmd-preview');
 
                             const headerText = headerElement ? headerElement.textContent.trim() : ' ';
-
                             let inputSpecificationText = '';
                             let counter = 0;
                             for (const element of inputSpecificationElements) {
@@ -52,10 +51,10 @@ document.getElementById('saveButton').addEventListener('click', async () => {
                             const markdownContent = `# ${headerText}\n\n${inputSpecificationText}`;
                             console.log('Generated Markdown Content:', markdownContent);
 
-                            return markdownContent;
+                            return { markdownContent, headerText };
                         } catch (error) {
                             console.error('Error in extractHTML:', error);
-                            return "element error";
+                            return { markdownContent: "element error", headerText: "error" };
                         }
                     }
 
@@ -104,7 +103,7 @@ document.getElementById('saveButton').addEventListener('click', async () => {
                     }
 
                     async function extractAndCombineContent() {
-                        const markdownHeader = await extractHTML();
+                        const { markdownContent: markdownHeader, headerText } = await extractHTML();
                         const testCases = await extractTestCases();
 
                         let combinedMarkdown = markdownHeader;
@@ -122,7 +121,7 @@ document.getElementById('saveButton').addEventListener('click', async () => {
                         }
 
                         console.log('Final Markdown Content:', combinedMarkdown);
-                        return combinedMarkdown;
+                        return { combinedMarkdown, headerText };
                     }
 
                     return extractAndCombineContent();
@@ -133,12 +132,12 @@ document.getElementById('saveButton').addEventListener('click', async () => {
                     console.error("Error extracting HTML:", chrome.runtime.lastError);
                     return;
                 }
-                const markdownContent = result[0].result;
-                const blob = new Blob([markdownContent], { type: 'text/markdown' });
+                const { combinedMarkdown, headerText } = result[0].result;
+                const blob = new Blob([combinedMarkdown], { type: 'text/markdown' });
                 const url = URL.createObjectURL(blob);
                 chrome.downloads.download({
                     url: url,
-                    filename: `ijudge-${activeTab.id}.md`
+                    filename: `${headerText}.md`
                 });
             });
         } else {
