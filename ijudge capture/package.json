@@ -1,1 +1,1 @@
-{ "dependencies": { "pupeteer": "^0.0.1" } }
+{"dependencies":{"pupeteer":"^0.0.1","turndown":"^7.2.0"}}
