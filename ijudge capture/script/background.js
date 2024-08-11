@@ -1,30 +1,42 @@
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "saveHTML") {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const activeTab = tabs[0]; // Get the active tab
+// background.js
+chrome.webNavigation.onCompleted.addListener((details) => {
+    if (details.frameId === 0) { // Ensure it's the main frame
+        console.log("Page navigation detected" , details);
+        if (details.url.startsWith("https://ijudge.it.kmitl.ac.th/problems/")) {
+            // Inject the content script
+            chrome.scripting.executeScript({
+                target: { tabId: details.tabId },
+                files: ['script/capture.js']
+            }, async () => {
+                // Check for injection errors
+                if (chrome.runtime.lastError) {
+                    console.error("Script injection error:", chrome.runtime.lastError);
+                    return;
+                }
 
-      if (activeTab) {
-        chrome.scripting.executeScript({
-          target: { tabId: activeTab.id },
-          function: function extractHTML() {
-            return document.documentElement.outerHTML;
-          }
-        }, (result) => {
-          if (chrome.runtime.lastError || !result || !result[0]) {
-            console.error("Error extracting HTML:", chrome.runtime.lastError);
-            return;
-          }
-          const html = result[0].result;
-          const blob = new Blob([html], { type: 'text/markdown' });
-          const url = URL.createObjectURL(blob);
-          chrome.downloads.download({
-            url: url,
-            filename: 'page.md'
-          });
-        });
-      } else {
-        console.error("No active tab found");
-      }
-    });
-  }
+                // Send a message to the content script
+                chrome.tabs.sendMessage(details.tabId, { action: "startProcessing" }, (response) => {
+                    if (chrome.runtime.lastError) {
+                        console.error("Message sending error:", chrome.runtime.lastError);
+                    } else if (response && response.status === "completed") {
+                        console.log("Processing completed, downloading file...");
+
+                        const { combinedMarkdown, headerText } = response;
+
+                        // Convert Markdown content to a data URL
+                        const markdownDataUrl = `data:text/markdown;charset=utf-8,${encodeURIComponent(combinedMarkdown)}`;
+
+                        // Perform the download in the background script
+                        chrome.downloads.download({
+                            url: markdownDataUrl,
+                            filename: `${headerText}.md`
+                        });
+                        chrome.tabs.goBack(details.tabId);
+                    } else {
+                        console.error("Processing failed or no response:", response);
+                    }
+                });
+            });
+        }
+    }
 });
