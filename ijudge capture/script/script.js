@@ -98,6 +98,11 @@ document.getElementById('saveButton').addEventListener('click', async () => {
                                 await goToNextPage();
                             }
                         }
+                        // fix in page have one testcase
+                        if (paginationList.length <= 0) {
+                            const currentPageTestCases = extractCurrentPage();
+                            testCases.push(...currentPageTestCases);
+                        }
 
                         return testCases;
                     }
