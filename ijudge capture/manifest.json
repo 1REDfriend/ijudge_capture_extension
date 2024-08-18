@@ -7,7 +7,9 @@
     "activeTab",
     "scripting",
     "downloads",
-    "webNavigation"
+    "webNavigation",
+    "tabs",
+    "storage"
   ],
   "background": {
     "service_worker": "./script/background.js"
@@ -19,13 +21,13 @@
   "host_permissions": [
     "https://ijudge.it.kmitl.ac.th/*"
   ],
-  "web_accessible_resources": [
+  "content_scripts": [
     {
-      "resources": [
-        "script/capture.js"
-      ],
       "matches": [
         "https://ijudge.it.kmitl.ac.th/*"
+      ],
+      "js": [
+        "script/injecter.js"
       ]
     }
   ]
