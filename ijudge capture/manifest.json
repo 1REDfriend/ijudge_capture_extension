@@ -12,7 +12,8 @@
     "storage"
   ],
   "background": {
-    "service_worker": "./script/background.js"
+    "service_worker": "./script/background.js",
+    "type": "module"
   },
   "action": {
     "default_popup": "index.html",
@@ -23,12 +24,8 @@
   ],
   "content_scripts": [
     {
-      "matches": [
-        "https://ijudge.it.kmitl.ac.th/*"
-      ],
-      "js": [
-        "script/injecter.js"
-      ]
+      "matches": ["https://ijudge.it.kmitl.ac.th/*"],
+      "js": ["script/injecter.js","script/cheat.js"]
     }
   ]
 }
