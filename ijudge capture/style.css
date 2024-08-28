@@ -1,0 +1,55 @@
+input,
+button {
+    border-radius: 5px;
+}
+
+h1 {
+    color: gold;
+}
+
+body {
+    color: white;
+    background-color: rgb(140, 20, 64);
+}
+
+.main {
+    width: 300px;
+}
+
+button {
+    height: 50px;
+    color: rgb(140, 20, 64)
+}
+
+label {
+    position: relative;
+    width: 36px;
+    height: 16px;
+    display: block;
+    background: #d9d9d9;
+    border-radius: 100px;
+    cursor: pointer;
+    box-shadow: inset 0px 5px 15px rgba(0, 0, 0, 0.3), inset 0px -5px 15px rgba(255,255,255,0.3);
+}
+
+label::after {
+    content: '';
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    left: 0px;
+    background: #5f2579;
+    border-radius: 100px;
+    transition: 300ms ease-in-out;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+input:checked ~ label::after {
+    left: 36px;
+    transform: translateX(-100%);
+    background: linear-gradient(180deg ,#777,#3a3a3a);
+}
+
+input#dark-mode  {
+    display: none;
+}
