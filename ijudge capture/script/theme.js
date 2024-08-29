@@ -20,7 +20,7 @@ document.getElementById("dark-mode").addEventListener('change' , async()=>{
     })
     
     const value = document.getElementById("dark-mode").checked;
-    if (value) {
+    if (!value) {
         await chrome.storage.local.set({theme: 'light'})
     }else {
         await chrome.storage.local.set({theme: 'dark'})
