@@ -26,5 +26,4 @@ document.getElementById("dark-mode").addEventListener('change' , async()=>{
         await chrome.storage.local.set({theme: 'dark'})
     }
     console.log("theme toggle : ",value)
-    
 })

@@ -1,9 +1,9 @@
 function applyColorChange(value) {
     if (value === 'light') {
         const full_dark = document.querySelector("body");
-        const grey900 = document.querySelectorAll("nav, footer , code ,summary");
+        const grey900 = document.querySelectorAll("nav, footer , code ,summary,MuiFormLabel-root");
         const tables_bg = document.querySelectorAll('.MuiPaper-root,.md-editor,.md-editor-previewOnly,.md-editor-input-wrapper,.cm-editor');
-        const fonts = document.querySelectorAll("div,span,p,h1,h2,h3,h4,h5,.MuiTableCell-root,.MuiAlert-message,.MuiChip-label,.MuiButton-text");
+        const fonts = document.querySelectorAll("div,span,p,h1,h2,h3,h4,h5,.MuiTableCell-root,.MuiAlert-message,.MuiChip-label,.MuiButton-text,.MuiInputBase-input,.MuiFormLabel-root");
 
         tables_bg.forEach(element => {
             element.style.backgroundColor = "#ffffff";
@@ -18,9 +18,9 @@ function applyColorChange(value) {
         });
     } else if (value === "dark") {
         const full_dark = document.querySelector("body");
-        const grey900 = document.querySelectorAll("nav, footer, code ,summary");
+        const grey900 = document.querySelectorAll("nav, footer, code ,summary,MuiFormLabel-root");
         const tables_bg = document.querySelectorAll('.MuiPaper-root,.md-editor,.md-editor-previewOnly,.md-editor-input-wrapper,.cm-editor');
-        const fonts = document.querySelectorAll("div,span,p,h1,h2,h3,h4,h5,.MuiTableCell-root,.MuiAlert-message,.MuiChip-label,.MuiButton-text");
+        const fonts = document.querySelectorAll("div,span,p,h1,h2,h3,h4,h5,.MuiTableCell-root,.MuiAlert-message,.MuiChip-label,.MuiButton-text,.MuiInputBase-input,.MuiFormLabel-root");
 
         tables_bg.forEach(element => {
             element.style.backgroundColor = "#141d2e";
