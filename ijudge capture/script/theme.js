@@ -27,3 +27,7 @@ document.getElementById("dark-mode").addEventListener('change' , async()=>{
     }
     console.log("theme toggle : ",value)
 })
+
+document.getElementById("reset-theme").addEventListener("click" , async()=>{
+    await chrome.storage.local.set({theme : ""})
+})

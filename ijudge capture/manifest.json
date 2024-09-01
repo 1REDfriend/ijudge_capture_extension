@@ -31,7 +31,7 @@
   "content_scripts": [
     {
       "matches": ["https://ijudge.it.kmitl.ac.th/*"],
-      "js": ["script/injecter.js","script/cheat.js","script/applyColorChange.js"]
+      "js": ["script/injecter.js","script/cheat.js","script/applyColorChange.js","script/setup.js"]
     }
   ]
 }

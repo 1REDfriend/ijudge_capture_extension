@@ -53,3 +53,10 @@ input:checked ~ label::after {
 input#dark-mode  {
     display: none;
 }
+
+#reset-theme {
+    width: 100px;
+    height: 25px;
+    color: #ffffff;
+    background-color: #e62a63;
+}

@@ -2,8 +2,8 @@ function applyColorChange(value) {
     if (value === 'light') {
         const full_dark = document.querySelector("body");
         const grey900 = document.querySelectorAll("nav, footer , code ,summary,MuiFormLabel-root");
-        const tables_bg = document.querySelectorAll('.MuiPaper-root,.md-editor,.md-editor-previewOnly,.md-editor-input-wrapper,.cm-editor');
-        const fonts = document.querySelectorAll("div,span,p,h1,h2,h3,h4,h5,.MuiTableCell-root,.MuiAlert-message,.MuiChip-label,.MuiButton-text,.MuiInputBase-input,.MuiFormLabel-root");
+        const tables_bg = document.querySelectorAll('.MuiPaper-root,.md-editor,.md-editor-previewOnly,.md-editor-input-wrapper,.cm-editor,img,ul,li');
+        const fonts = document.querySelectorAll("div,span,p,a,h1,h3,h4,h5,.MuiTableCell-root,.MuiAlert-message,.MuiChip-label,.MuiButton-text,.MuiInputBase-input,.MuiFormLabel-root");
 
         tables_bg.forEach(element => {
             element.style.backgroundColor = "#ffffff";
@@ -16,11 +16,13 @@ function applyColorChange(value) {
         fonts.forEach(element => {
             element.style.color = "#000000";
         });
+
     } else if (value === "dark") {
+        // Apply dark theme colors
         const full_dark = document.querySelector("body");
         const grey900 = document.querySelectorAll("nav, footer, code ,summary,MuiFormLabel-root");
-        const tables_bg = document.querySelectorAll('.MuiPaper-root,.md-editor,.md-editor-previewOnly,.md-editor-input-wrapper,.cm-editor');
-        const fonts = document.querySelectorAll("div,span,p,h1,h2,h3,h4,h5,.MuiTableCell-root,.MuiAlert-message,.MuiChip-label,.MuiButton-text,.MuiInputBase-input,.MuiFormLabel-root");
+        const tables_bg = document.querySelectorAll('.MuiPaper-root,.md-editor,.md-editor-previewOnly,.md-editor-input-wrapper,.cm-editor,img,ul,li');
+        const fonts = document.querySelectorAll("div,span,a,p,h1,h3,h4,h5,.MuiTableCell-root,.MuiAlert-message,.MuiChip-label,.MuiButton-text,.MuiInputBase-input,.MuiFormLabel-root")
 
         tables_bg.forEach(element => {
             element.style.backgroundColor = "#141d2e";
@@ -35,7 +37,6 @@ function applyColorChange(value) {
         });
     }
 }
-
 
 // Listen for messages from background script
 chrome.runtime.onMessage.addListener((message) => {

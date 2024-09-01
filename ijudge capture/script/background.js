@@ -61,21 +61,34 @@ chrome.storage.onChanged.addListener(async (changes, areaName) => {
     }
 });
 
-// loop update theme
-chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-    if (changeInfo.status === 'complete') {
-        await chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            if (tabs.length > 0 && tabs[0].url.startsWith("https://ijudge.it.kmitl.ac.th/")) {
-                chrome.scripting.executeScript({
-                    target: { tabId: tabId },
-                    files: ["script/applyColorChange.js"]
-                },async() => {
-                    const result = await chrome.storage.local.get('theme');
-                    const themeValue = result.theme;
-                    console.log(themeValue)
-                    chrome.tabs.sendMessage(tabs[0].id, { action: 'applyColorChange', value: themeValue });
-                });
-            }
-        });
+//                       //
+//  loop update theme    //
+//                       //
+// Function to handle the script execution and theme application
+async function applyColorChange(tabId) {
+    await chrome.scripting.executeScript({
+        target: { tabId: tabId },
+        files: ["script/applyColorChange.js"]
+    }, async () => {
+        const result = await chrome.storage.local.get('theme');
+        const themeValue = result.theme;
+        console.log(themeValue);
+        chrome.tabs.sendMessage(tabId, { action: 'applyColorChange', value: themeValue });
+    });
+}
+
+// Listener for page load completion
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (changeInfo.status === 'complete' && tab.url.startsWith("https://ijudge.it.kmitl.ac.th/")) {
+        applyColorChange(tabId);
     }
+});
+
+// Listener for route changes within the same tab
+chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
+    chrome.tabs.get(details.tabId, (tab) => {
+        if (tab.url.startsWith("https://ijudge.it.kmitl.ac.th/")) {
+            applyColorChange(details.tabId);
+        }
+    });
 });
