@@ -20,11 +20,14 @@ document.getElementById("dark-mode").addEventListener('change' , async()=>{
     })
     
     const value = document.getElementById("dark-mode").checked;
-    if (value) {
+    if (!value) {
         await chrome.storage.local.set({theme: 'light'})
     }else {
         await chrome.storage.local.set({theme: 'dark'})
     }
     console.log("theme toggle : ",value)
-    
+})
+
+document.getElementById("reset-theme").addEventListener("click" , async()=>{
+    await chrome.storage.local.set({theme : ""})
 })

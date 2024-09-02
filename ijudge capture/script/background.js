@@ -47,59 +47,74 @@ chrome.storage.onChanged.addListener(async (changes, areaName) => {
         }
     }
     if (areaName === 'local' && changes.theme != null) {
-        const value = await changes.theme.oldValue;
-        if (value == 'light') {
-            await chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
-                if (await tabs.length > 0) {
-                    await chrome.scripting.executeScript({
-                        target: { tabId: tabs[0].id },
-                        func: async() => {
-                            const bg_elements = document.querySelector("body");
-                            const bg2 = document.querySelectorAll("nav, footer");
-                            const tables_bg = document.querySelectorAll('.MuiPaper-root')
-                            const fonts = document.querySelectorAll("p,h1,h2,h3,h4,h5,.MuiTableCell-root,.MuiAlert-message,.MuiChip-label,.MuiButton-text")
+        const themeValue = changes.theme.newValue;
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (tabs.length > 0 && tabs[0].url.startsWith("https://ijudge.it.kmitl.ac.th/")) {
+                chrome.scripting.executeScript({
+                    target: { tabId: tabs[0].id },
+                    files: ['script/applyColorChange.js']
+                }, () => {
+                    chrome.tabs.sendMessage(tabs[0].id, { action: 'applyColorChange', value: themeValue });
+                });
+            }
+        });
+    }
+});
 
-                            tables_bg.forEach(element => {
-                                element.style.backgroundColor = "#f3f4f6"
-                            })
-                            bg_elements.style.backgroundColor = "#f3f4f6"
-                            bg2.forEach(element => {
-                                element.style.backgroundColor = "#f3f4f6";
-                                element.style.borderColor = "#ffffff";
-                            });
-                            fonts.forEach(element => {
-                                element.style.color = "#000000";
-                            })
-                        }
-                    })
-                }
-            })
-        } else if (value == "dark") {
-            await chrome.tabs.query({ active: true, currentWindow: true }, async(tabs) => {
-                if (await tabs.length > 0) {
-                    await chrome.scripting.executeScript({
-                        target: { tabId: tabs[0].id },
-                        func: async() => {
-                            const bg_elements = document.querySelector("body");
-                            const bg2 = document.querySelectorAll("nav, footer");
-                            const tables_bg = document.querySelectorAll('.MuiPaper-root')
-                            const fonts = document.querySelectorAll("p,h1,h2,h3,h4,h5,.MuiTableCell-root,.MuiAlert-message,.MuiChip-label,.MuiButton-text")
+//                       //
+//  loop update theme    //
+//                       //
+// Function to handle the script execution and theme application
+async function applyColorChange(tabId) {
+    await chrome.scripting.executeScript({
+        target: { tabId: tabId },
+        files: ["script/applyColorChange.js"]
+    }, async () => {
+        const result = await chrome.storage.local.get('theme');
+        const themeValue = result.theme;
+        chrome.tabs.sendMessage(tabId, { action: 'applyColorChange', value: themeValue });
+    });
+}
 
-                            tables_bg.forEach(element => {
-                                element.style.backgroundColor = "#141d2e"
-                            })
-                            bg_elements.style.backgroundColor = "#0d1016"
-                            bg2.forEach(element => {
-                                element.style.backgroundColor = "#141d2e";
-                                element.style.borderColor = "#1d4eb1";
-                            });
-                            fonts.forEach(element => {
-                                element.style.color = "#ffffff";
-                            })
-                        }
-                    })
-                }
-            })
+// Listener for page load completion
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (changeInfo.status === 'complete' && tab.url.startsWith("https://ijudge.it.kmitl.ac.th/")) {
+        applyColorChange(tabId);
+    }
+});
+
+// Listener for route changes within the same tab
+chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
+    chrome.tabs.get(details.tabId, (tab) => {
+        if (tab.url.startsWith("https://ijudge.it.kmitl.ac.th/")) {
+            applyColorChange(details.tabId);
         }
+    });
+});
+
+chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs.length > 0) {
+        const tabId = tabs[0].id;
+        chrome.scripting.executeScript({
+            target: { tabId: tabId },
+            func: (tabId, applyColorChange) => {
+                const elements = document.querySelectorAll("button, a, img");
+                elements.forEach(async(element) => {
+                    await new Promise(r => setTimeout(r,1000))
+                    element.addEventListener('click', async () => {
+                        // Retrieve the theme value from local storage
+                        const result = await chrome.storage.local.get('theme');
+                        const themeValue = result.theme;
+
+                        // Send a message to the content script to apply the color change
+                        chrome.runtime.sendMessage({ 
+                            action: 'applyColorChange', 
+                            value: themeValue 
+                        });
+                    });
+                });
+            },
+            args: [tabId]  // Pass tabId as an argument to the function
+        });
     }
 });

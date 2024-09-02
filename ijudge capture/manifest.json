@@ -22,10 +22,16 @@
   "host_permissions": [
     "https://ijudge.it.kmitl.ac.th/*"
   ],
+  "web_accessible_resources": [
+    {
+      "resources": ["applyColorChange.js"],
+      "matches": ["https://ijudge.it.kmitl.ac.th/*"]
+    }
+  ],
   "content_scripts": [
     {
       "matches": ["https://ijudge.it.kmitl.ac.th/*"],
-      "js": ["script/injecter.js","script/cheat.js"]
+      "js": ["script/injecter.js","script/cheat.js","script/applyColorChange.js","script/setup.js"]
     }
   ]
 }
