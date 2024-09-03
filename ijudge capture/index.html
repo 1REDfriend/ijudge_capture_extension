@@ -1,17 +1,37 @@
 <html>
 
 <body>
+
     <head>
         <link rel="stylesheet" href="style.css">
     </head>
     <div class="main">
         <h1>Capture I-judge KMTIL</h1>
+        <hr>
         <p>Do You have a problem?</p>
         <p>Yes You can use that for fix a problem!</p>
         <div>
             <h3>Change Theme : [beta]</h3>
-            <input type="checkbox" id="dark-mode"/>
+            <input type="checkbox" id="dark-mode" />
             <label for="dark-mode"></label>
+            <p>Custom Theme</p>
+            <div class="div-colors">
+                <p>Body :</p>
+                <input type="color" id="color-body">
+            </div>
+            <div class="div-colors">
+                <p>Back Layer :</p>
+                <input type="color" id="color-backLayer">
+            </div>
+            <div class="div-colors">
+                <p>front Layer :</p>
+                <input type="color" id="color-frontLayer">
+            </div>
+            <div class="div-colors">
+                <p>font :</p>
+                <input type="color" id="color-font">
+            </div>
+            <button id="save-colors">Save</button>
         </div>
         <div>
             <h3>RESET Theme :</h3>

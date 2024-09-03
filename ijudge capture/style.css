@@ -60,3 +60,23 @@ input#dark-mode  {
     color: #ffffff;
     background-color: #e62a63;
 }
+
+.div-colors {
+    display: flex;
+    align-items: center;
+}
+
+.div-colors input {
+    width: 25px;
+    height: 25px;
+    border-radius: 100%;
+    border-width: 0px;
+    border-color: transparent;
+    background-color: transparent;
+}
+
+#save-colors {
+    width: 100px;
+    height: 25px;
+    text-align: center;
+}

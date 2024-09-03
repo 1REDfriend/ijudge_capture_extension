@@ -48,13 +48,14 @@ chrome.storage.onChanged.addListener(async (changes, areaName) => {
     }
     if (areaName === 'local' && changes.theme != null) {
         const themeValue = changes.theme.newValue;
+        const customeTheme = await chrome.storage.local.get("customTheme").customTheme
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs.length > 0 && tabs[0].url.startsWith("https://ijudge.it.kmitl.ac.th/")) {
                 chrome.scripting.executeScript({
                     target: { tabId: tabs[0].id },
-                    files: ['script/applyColorChange.js']
-                }, () => {
-                    chrome.tabs.sendMessage(tabs[0].id, { action: 'applyColorChange', value: themeValue });
+                    files: ['script/applyColorChange.js'] 
+                },async () => {
+                    chrome.tabs.sendMessage(tabs[0].id, { action: 'applyColorChange', value: themeValue, customeTheme: await customeTheme });
                 });
             }
         });
@@ -71,8 +72,14 @@ async function applyColorChange(tabId) {
         files: ["script/applyColorChange.js"]
     }, async () => {
         const result = await chrome.storage.local.get('theme');
+        const customTheme = await chrome.storage.local.get('customTheme').customTheme;
+        console.log(customTheme)
         const themeValue = result.theme;
-        chrome.tabs.sendMessage(tabId, { action: 'applyColorChange', value: themeValue });
+        if (customTheme) {
+            chrome.tabs.sendMessage(tabId, { action: 'applyColorChange', value: themeValue ,customTheme: await customTheme});
+        }else {
+            chrome.tabs.sendMessage(tabId, { action: 'applyColorChange', value: themeValue });
+        }
     });
 }
 
@@ -90,31 +97,4 @@ chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
             applyColorChange(details.tabId);
         }
     });
-});
-
-chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs.length > 0) {
-        const tabId = tabs[0].id;
-        chrome.scripting.executeScript({
-            target: { tabId: tabId },
-            func: (tabId, applyColorChange) => {
-                const elements = document.querySelectorAll("button, a, img");
-                elements.forEach(async(element) => {
-                    await new Promise(r => setTimeout(r,1000))
-                    element.addEventListener('click', async () => {
-                        // Retrieve the theme value from local storage
-                        const result = await chrome.storage.local.get('theme');
-                        const themeValue = result.theme;
-
-                        // Send a message to the content script to apply the color change
-                        chrome.runtime.sendMessage({ 
-                            action: 'applyColorChange', 
-                            value: themeValue 
-                        });
-                    });
-                });
-            },
-            args: [tabId]  // Pass tabId as an argument to the function
-        });
-    }
 });
